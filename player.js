@@ -1,4 +1,4 @@
-const messages = require('./messages.json')
+const messages = require('./messages.js')
 
 class Player{
     constructor(name, mode){

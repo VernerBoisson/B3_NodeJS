@@ -5,7 +5,7 @@ const Player = require('./player')
 const WorldTour = require('./modes/worldtour')
 const ThreeHundredOne = require('./modes/threehundredone')
 const Cricket = require('./modes/cricket')
-const messages = require('./messages.json')
+const messages = require('./messages.js')
 const players = new Players()
 
 let mode
@@ -32,7 +32,7 @@ async function score(mode){
 }
 
 inquirer.prompt([questions.mode, questions.nbplayer])
-.then(async (answers) => {
+.then(async answers => {
     switch (answers.mode) {
         case messages.modename.worldtour:
             mode = new WorldTour(answers.mode)
@@ -47,23 +47,34 @@ inquirer.prompt([questions.mode, questions.nbplayer])
             break;
     }
     for(let i=0; i<answers.nbplayer; i++){
-        await inquirer.prompt(questions.name(i)).then( (answers) => { 
+        await inquirer.prompt(questions.name(i+1)).then( (answers) => { 
             players.add(new Player(answers.name, mode.name))
         })
     }
-}).then(async (x) => {
+}).then(async answers => {
     let winner = false
     while(!winner){
         for(let player of players.players){
-            console.log(messages.turn+player.name)
+            console.log(messages.turn(player.name))
             let x = await score(mode.name)
             mode.run(x , player)
             if(player.winner){
                 winner = true
-                console.log(messages.winner+player.name)
+                console.log(messages.winner(player.name))
                 break
             }else{
-                console.log(player.score)
+                switch (mode.name) {
+                    case messages.modename.worldtour:
+                        console.log(messages.score.worldtour(player.name, player.score))
+                        break;
+                    case messages.modename.threehundredone:
+                        console.log(messages.score.threehundredone(player.name, player.score))
+                        break;
+                    case messages.modename.cricket:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

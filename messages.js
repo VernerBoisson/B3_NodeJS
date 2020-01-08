@@ -1,4 +1,4 @@
-{
+module.exports = {
 "modename":{
     "worldtour":"Tour du monde",
     "threehundredone":"301",
@@ -12,8 +12,9 @@
     "threehundredone":"Quel est le score du tir ?",
     "cricket":"Quel est le score ?"
 },
-"winner":"Le vainqueur est ",
-"turn":"Tour de ",
+"defaultplayer": i => `Player${i}`,
+"winner": x => `Le vainqueur est ${x}.`,
+"turn": x => `Le tour de ${x}`,
 "errors":{
     "questions":{
         "players":"S'il vous plait, entrer un nombre de joueur valide.",
@@ -22,5 +23,10 @@
         "cricket":"S'il vous plait, entrer un score valide."     
     },
     "mode":"Ce mode n'existe pas."
+},
+"score":{
+    "worldtour":(player, score) => `Secteur a dévérouillé pour ${player} : ${score}.`,
+    "threehundredone": (player, score) => `Le score de ${player} est ${score}.`,
+    "cricket":""
 }
 }

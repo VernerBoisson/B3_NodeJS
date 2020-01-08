@@ -1,4 +1,4 @@
-const message = require('./messages.json')
+const message = require('./messages.js')
 
 module.exports = {
     mode: {
@@ -31,7 +31,7 @@ module.exports = {
         name: 'name',
         message: message.questions.playername,
         default: function() {
-          return `player${i+1}`;
+          return message.defaultplayer(i);
         }
     }},
     worldtour:{
