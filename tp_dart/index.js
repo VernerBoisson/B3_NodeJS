@@ -10,6 +10,13 @@ const players = new Players()
 
 let mode
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 async function score(mode){
     let x
     switch (mode) {
@@ -53,6 +60,7 @@ inquirer.prompt([questions.mode, questions.nbplayer])
     }
 }).then(async answers => {
     let winner = false
+    shuffleArray(players.players)
     while(!winner){
         for(let player of players.players){
             console.log(messages.turn(player.name))
