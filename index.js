@@ -17,9 +17,10 @@ async function score(mode){
             x = await inquirer.prompt(questions.worldtour)
             break;
         case messages.modename.threehundredone:
-            x = []
+            x = {score:[]}
             for(let i=0; i<3; i++){
-                x.push(await inquirer.prompt(questions.threehundredone))
+                let y = await inquirer.prompt(questions.threehundredone) 
+                x.score.push(y.score)
             }
             break;
         case messages.modename.cricket:
@@ -55,7 +56,8 @@ inquirer.prompt([questions.mode, questions.nbplayer])
     while(!winner){
         for(let player of players.players){
             console.log(messages.turn+player.name)
-            mode.run(await score(mode.name), player)
+            let x = await score(mode.name)
+            mode.run(x , player)
             if(player.winner){
                 winner = true
                 console.log(messages.winner+player.name)
