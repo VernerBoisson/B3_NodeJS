@@ -1,18 +1,20 @@
+const message = require('./messages.json')
+
 module.exports = {
     mode: {
         type: 'rawlist',
         name: 'mode',
-        message: 'Quel est le mode de jeu ?',
+        message: message.questions.mode,
         choices: [
-          'Tour du monde',
-          '301',
-          'Cricket'
+          message.modename.worldtour,
+          message.modename.threehundredone,
+          message.modename.cricket
         ]
     },
     nbplayer:{
         type: 'input',
         name: 'nbplayer',
-        message: "Combien de joueurs ?",
+        message: message.questions.players,
         validate: function(value) {
           let pass = value.match(
             /^[0-9]+/gm
@@ -21,15 +23,57 @@ module.exports = {
             return true;
           }
     
-          return `S'il vous plait, entrer un nombre de joueur valide.`;
+          return message.errors.questions.players;
         }
     },
     name: (i) => {return {
         type: 'input',
         name: 'name',
-        message: "Quel est ton nom ?",
+        message: message.questions.playername,
         default: function() {
           return `player${i+1}`;
         }
     }},
+    worldtour:{
+        type: 'input',
+        name: 'score',
+        message: message.questions.worldtour,
+        validate: function(value) {
+          let pass = value.match(
+            /^[0-9]+/gm
+          );
+          if (pass && pass > 0 && pass < 21) {
+            return true;
+          }
+          return message.errors.questions.worldtour;
+        }
+    },
+    threehundredone:{
+        type: 'input',
+        name: 'score',
+        message: message.questions.threehundredone,
+        validate: function(value) {
+          let pass = value.match(
+            /^[0-9]+/gm
+          );
+          if (pass && pass > 0) {
+            return true;
+          }
+          return message.errors.questions.threehundredone;
+        }
+    },
+    cricket:{
+        type: 'input',
+        name: 'score',
+        message: message.questions.cricket,
+        validate: function(value) {
+          let pass = value.match(
+            /^[0-9]+/gm
+          );
+          if (pass) {
+            return true;
+          }
+          return message.errors.questions.cricket;
+        }
+    },
 }

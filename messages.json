@@ -1,0 +1,26 @@
+{
+"modename":{
+    "worldtour":"Tour du monde",
+    "threehundredone":"301",
+    "cricket":"Cricket"
+},
+"questions":{
+    "mode":"Quel est le mode de jeu ?",
+    "players":"Combien de joueurs ?",
+    "playername":"Quel est ton nom ?",
+    "worldtour":"Quel est le secteur touché ?",
+    "threehundredone":"Quel est le score du tir ?",
+    "cricket":"Quel est le score ?"
+},
+"winner":"Le vainqueur est ",
+"turn":"Tour de ",
+"errors":{
+    "questions":{
+        "players":"S'il vous plait, entrer un nombre de joueur valide.",
+        "worldtour":"S'il vous plait, entrer un score valide.",
+        "threehundredone":"S'il vous plait, entrer un score valide.",
+        "cricket":"S'il vous plait, entrer un score valide."     
+    },
+    "mode":"Ce mode n'existe pas."
+}
+}
