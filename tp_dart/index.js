@@ -6,16 +6,10 @@ const WorldTour = require('./modes/worldtour')
 const ThreeHundredOne = require('./modes/threehundredone')
 const Cricket = require('./modes/cricket')
 const messages = require('./messages.js')
+const tools = require('./tools')
 const players = new Players()
 
-let mode
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
 
 async function score(mode){
     let x
@@ -40,19 +34,11 @@ async function score(mode){
 
 inquirer.prompt([questions.mode, questions.nbplayer])
 .then(async answers => {
-    switch (answers.mode) {
-        case messages.modename.worldtour:
-            mode = new WorldTour(answers.mode)
-            break;
-        case messages.modename.threehundredone:
-            mode = new ThreeHundredOne(answers.mode)
-            break;
-        case messages.modename.cricket:
-            mode = new Cricket(answers.mode)
-            break;
-        default:
-            break;
-    }
+    tools.myfunction(answers.mode, 
+        x => mode = new WorldTour(answers.mode),
+        x => mode = new ThreeHundredOne(answers.mode),
+        x => mode = new Cricket(answers.mode)
+        )
     for(let i=0; i<answers.nbplayer; i++){
         await inquirer.prompt(questions.name(i+1)).then( (answers) => { 
             players.add(new Player(answers.name, mode.name))
@@ -60,7 +46,7 @@ inquirer.prompt([questions.mode, questions.nbplayer])
     }
 }).then(async answers => {
     let winner = false
-    shuffleArray(players.players)
+    tools.shuffleArray(players.players)
     while(!winner){
         for(let player of players.players){
             console.log(messages.turn(player.name))
@@ -71,18 +57,11 @@ inquirer.prompt([questions.mode, questions.nbplayer])
                 console.log(messages.winner(player.name))
                 break
             }else{
-                switch (mode.name) {
-                    case messages.modename.worldtour:
-                        console.log(messages.score.worldtour(player.name, player.score))
-                        break;
-                    case messages.modename.threehundredone:
-                        console.log(messages.score.threehundredone(player.name, player.score))
-                        break;
-                    case messages.modename.cricket:
-                        break;
-                    default:
-                        break;
-                }
+                tools.myfunction(mode.name, 
+                    x => console.log(messages.score.worldtour(player.name, player.score)),
+                    x => console.log(messages.score.threehundredone(player.name, player.score)),
+                    x => console.log()
+                    )
             }
         }
     }
