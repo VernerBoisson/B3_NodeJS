@@ -56,7 +56,7 @@ module.exports = {
           let pass = value.match(
             /^[0-9]+/gm
           );
-          if (pass && pass > 0) {
+          if (pass && pass >= 0) {
             return true;
           }
           return message.errors.questions.threehundredone;
@@ -76,4 +76,14 @@ module.exports = {
           return message.errors.questions.cricket;
         }
     },
+    multiplicator:{
+      type: 'rawlist',
+      name: 'multiplicator',
+      message: message.questions.multiplicator,
+      choices: [
+        message.multiplicator.simple,
+        message.multiplicator.double,
+        message.multiplicator.triple
+      ]
+  },
 }

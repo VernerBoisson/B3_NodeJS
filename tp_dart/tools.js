@@ -1,14 +1,14 @@
 const modes = require('./messages').modename
 
 module.exports ={
-    myfunction:(mode, ...callbacks) => {
+    switch: async (mode, ...callbacks) => {
         let obj = {}
         let c = 0
         for(let mode in modes){
             obj[modes[mode]] = callbacks[c]
             c++
         }
-        obj[mode]()
+        return await obj[mode]()
     },
 
     shuffleArray: (array) => {

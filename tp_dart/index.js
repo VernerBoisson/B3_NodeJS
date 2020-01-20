@@ -7,34 +7,14 @@ const ThreeHundredOne = require('./modes/threehundredone')
 const Cricket = require('./modes/cricket')
 const messages = require('./messages.js')
 const tools = require('./tools')
+
 const players = new Players()
-
-
-
-async function score(mode){
-    let x
-    switch (mode) {
-        case messages.modename.worldtour:
-            x = await inquirer.prompt(questions.worldtour)
-            break;
-        case messages.modename.threehundredone:
-            x = {score:[]}
-            for(let i=0; i<3; i++){
-                let y = await inquirer.prompt(questions.threehundredone) 
-                x.score.push(y.score)
-            }
-            break;
-        case messages.modename.cricket:
-            break;
-        default:
-            break;
-    }
-    return x.score
-}
+const winner = []
+const shotnumbers = 3
 
 inquirer.prompt([questions.mode, questions.nbplayer])
 .then(async answers => {
-    tools.myfunction(answers.mode, 
+    tools.switch(answers.mode, 
         x => mode = new WorldTour(answers.mode),
         x => mode = new ThreeHundredOne(answers.mode),
         x => mode = new Cricket(answers.mode)
@@ -50,14 +30,44 @@ inquirer.prompt([questions.mode, questions.nbplayer])
     while(!winner){
         for(let player of players.players){
             console.log(messages.turn(player.name))
-            let x = await score(mode.name)
-            mode.run(x , player)
+            x = await tools.switch(mode.name,
+                async () => {
+                    let score = await inquirer.prompt(questions.worldtour)
+                    console.log(score, score.score)
+                    return score.score
+                },
+                async () => {
+                    x= {score:[]}
+                    let sum = 0
+                    for(let i=0; i<shotnumbers; i++){
+                        let score = await inquirer.prompt(questions.threehundredone)
+                        let double = await inquirer.prompt(questions.multiplicator)
+                        if(double===messages.multiplicator.double){
+                            mode.winnable = true
+                        }else{
+                            mode.winnable = false
+                        }
+                        x.score.push(score.score)
+                        sum += +score.score
+                        if(i!=2)
+                            if(player.score-sum>1)
+                                console.log(messages.score.threehundredone(player.name, player.score - sum))
+                        if(player.score-sum === 0 && mode.winnable){
+                            player.winner = true
+                            player.score = 0
+                            break
+                        }
+                    }
+                    return x.score
+                },
+                x => null)
+            await mode.run(x , player)
             if(player.winner){
                 winner = true
                 console.log(messages.winner(player.name))
                 break
             }else{
-                tools.myfunction(mode.name, 
+                await tools.switch(mode.name, 
                     x => console.log(messages.score.worldtour(player.name, player.score)),
                     x => console.log(messages.score.threehundredone(player.name, player.score)),
                     x => console.log()
