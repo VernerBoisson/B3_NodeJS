@@ -40,7 +40,7 @@ module.exports = {
         message: message.questions.worldtour(x),
         validate: function(value) {
           let pass = value.match(
-            /[0-9]|1[0-9]|20)+/gm
+            /[0-9]|1[0-9]|20+/gm
           );
           if (pass && pass > 0 && pass < 21) {
             return true;
@@ -54,7 +54,7 @@ module.exports = {
         message: message.questions.threehundredone(x),
         validate: function(value) {
           let pass = value.match(
-            /[0-9]|1[0-9]|20|25)+/gm
+            /[0-9]|1[0-9]|20|25+/gm
           );
           if (pass && pass >= 0) {
             return true;
@@ -68,7 +68,7 @@ module.exports = {
         message: message.questions.cricket,
         validate: function(value) {
           let pass = value.match(
-            /[0-9]|1[0-9]|20|25)+/gm
+            /[0-9]|1[0-9]|20|25+/gm
           );
           if (pass) {
             return true;

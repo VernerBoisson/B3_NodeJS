@@ -8,23 +8,40 @@ const Cricket = require('./modes/cricket')
 const messages = require('../messages.js')
 const tools = require('./tools')
 
-const players = new Players()
-const shotnumbers = 3
-
-inquirer.prompt([questions.mode, questions.nbplayer])
-.then(async answers => {
-    tools.switch(answers.mode, 
-        x => mode = new WorldTour(answers.mode),
-        x => mode = new ThreeHundredOne(answers.mode),
-        x => mode = new Cricket(answers.mode)
-        )
-    for(let i=0; i<answers.nbplayer; i++){
-        await inquirer.prompt(questions.name(i+1)).then( (answers) => { 
-            players.addPlayer(new Player(answers.name, mode.name))
-        })
+async function shots(player, callbackSector, callbackMutiplicator, callbackMessage, position){
+    console.log(callbackMutiplicator)
+    for(let i=0; i<3; i++){
+        let score = 0
+        let sector = await inquirer.prompt(callbackSector(i+1))
+        let multiplicator = callbackMutiplicator
+        score = sector.score * multiplicator.multiplicator
+        await mode.run(score, multiplicator.multiplicator, player)
+        console.log(callbackMessage(player.name, player.score))
+        if(!player.isPlaying){
+            console.log(messages.winner(player.name, position))
+            players.addWinner(player)
+            player.winner = position
+            position++
+            break
+        }
     }
-}).then(async answers => {
+}
+
+
+async function play(){
+    const players = new Players()
+    const shotnumbers = 3
     let position = 1
+    const answerMode = await inquirer.prompt(questions.mode)
+    const answerNbPlayer = await inquirer.prompt(questions.nbplayer)
+    tools.switch(answerMode.mode, 
+        () => mode = new WorldTour(answerMode.mode),
+        () => mode = new ThreeHundredOne(answerMode.mode),
+        () => mode = new Cricket(answerMode.mode))
+    for(let i=0; i<answerNbPlayer.nbplayer; i++){
+        let name = await inquirer.prompt(questions.name(i+1))
+        players.addPlayer(new Player(name.name, mode.name))
+    }
     tools.shuffleArray(players.players)
     while(players.lengthRanking() < players.lengthPlayers()){
         for(let player of players.players){
@@ -37,39 +54,26 @@ inquirer.prompt([questions.mode, questions.nbplayer])
                 console.log(messages.turn(player.name))
                 await tools.switch(mode.name,
                     async () => {
-                        for(let i=0; i<shotnumbers; i++){
-                            let sector = await inquirer.prompt(questions.worldtour(i+1))
-                            mode.run(sector.score, player)
-                            console.log(messages.score.worldtour(player.name, player.score))
-                            if(!player.isPlaying){
-                                console.log(messages.winner(player.name, position))
-                                players.addWinner(player)
-                                player.winner = position
-                                position++
-                                break
-                            }
-                        }
+                        await shots(player, 
+                            questions.worldtour,
+                            {multiplicator:1}, 
+                            messages.score.worldtour,
+                            position
+                        )
 
                     },
                     async () => {
-                        for(let i=0; i<shotnumbers; i++){
-                            let score = 0
-                            let sector = await inquirer.prompt(questions.threehundredone(i+1))
-                            let double = await inquirer.prompt(questions.multiplicator)
-                            score = sector.score * double.multiplicator
-                            await mode.run(score, double.multiplicator, player)
-                            console.log(messages.score.threehundredone(player.name, player.score))
-                            if(!player.isPlaying){
-                                console.log(messages.winner(player.name, position))
-                                players.addWinner(player)
-                                player.winner = position
-                                position++
-                                break
-                            }
-                        }
+                        await shots(player, 
+                            questions.threehundredone, 
+                            await inquirer.prompt(questions.multiplicator), 
+                            messages.score.threehundredone,
+                            position
+                        )
                     },
                     x => null)
             }
         }
     }
-}).catch()
+}
+
+play()

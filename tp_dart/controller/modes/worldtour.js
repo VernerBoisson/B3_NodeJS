@@ -5,7 +5,7 @@ class WorldTour extends Mode{
         super(name)
     }
 
-    run(secteur, player){
+    run(secteur, multiplicator=null,player){
         if(player.score[0] ==secteur){
             player.score.shift()
         }
