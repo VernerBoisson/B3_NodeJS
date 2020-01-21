@@ -1,4 +1,4 @@
-const message = require('./messages.js')
+const message = require('../messages.js')
 
 module.exports = {
     mode: {
@@ -84,6 +84,18 @@ module.exports = {
         message.multiplicator.simple,
         message.multiplicator.double,
         message.multiplicator.triple
-      ]
+      ],
+      filter: x => {
+        switch (x) {
+          case message.multiplicator.simple:
+            return 1
+          case message.multiplicator.double:
+            return 2
+          case message.multiplicator.triple:
+            return 3
+          default:
+            break;
+        }
+      }
   },
 }

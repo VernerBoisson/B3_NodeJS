@@ -14,7 +14,7 @@ module.exports = {
         "multiplicator":"Quel est le multiplicateur du tir ?"
     },
     "defaultplayer": i => `Player${i}`,
-    "winner": x => `Le vainqueur est ${x}.`,
+    "winner": (player, position) => `${player} a terminé à ${position} place.`,
     "turn": x => `Le tour de ${x}`,
     "errors":{
         "questions":{

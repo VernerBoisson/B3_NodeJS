@@ -1,11 +1,11 @@
 const inquirer = require('inquirer')
 const questions = require('./questions')
-const Players = require('./players')
-const Player = require('./player')
+const Players = require('./players/players')
+const Player = require('./players/player')
 const WorldTour = require('./modes/worldtour')
 const ThreeHundredOne = require('./modes/threehundredone')
 const Cricket = require('./modes/cricket')
-const messages = require('./messages.js')
+const messages = require('../messages.js')
 const tools = require('./tools')
 
 const players = new Players()
@@ -25,10 +25,17 @@ inquirer.prompt([questions.mode, questions.nbplayer])
         })
     }
 }).then(async answers => {
-    let winner = false
+    let rank = []
+    let l = players.players.length
+    let position = 1
     tools.shuffleArray(players.players)
-    while(!winner){
+    while(rank.length < l){
         for(let player of players.players){
+            if(rank.length === l-1){
+                console.log(messages.winner(player.name, position))
+                rank.push(player.name)
+                break
+            }
             console.log(messages.turn(player.name))
             x = await tools.switch(mode.name,
                 async () => {
@@ -40,16 +47,18 @@ inquirer.prompt([questions.mode, questions.nbplayer])
                     x= {score:[]}
                     let sum = 0
                     for(let i=0; i<shotnumbers; i++){
-                        let score = await inquirer.prompt(questions.threehundredone)
+                        let score = 0
+                        let sector = await inquirer.prompt(questions.threehundredone)
                         let double = await inquirer.prompt(questions.multiplicator)
-                        if(double===messages.multiplicator.double){
+                        if(double.multiplicator===2){
                             mode.winnable = true
                         }else{
                             mode.winnable = false
                         }
-                        x.score.push(score.score)
-                        sum += +score.score
-                        if(i!=2)
+                        score = sector.score * double.multiplicator
+                        x.score.push(score)
+                        sum += +score
+                        if(i!=shotnumbers-1)
                             if(player.score-sum>1)
                                 console.log(messages.score.threehundredone(player.name, player.score - sum))
                         if(player.score-sum === 0 && mode.winnable){
@@ -63,9 +72,9 @@ inquirer.prompt([questions.mode, questions.nbplayer])
                 x => null)
             await mode.run(x , player)
             if(player.winner){
-                winner = true
-                console.log(messages.winner(player.name))
-                break
+                console.log(messages.winner(player.name, position))
+                rank.push(player.name)
+                position++
             }else{
                 await tools.switch(mode.name, 
                     x => console.log(messages.score.worldtour(player.name, player.score)),
