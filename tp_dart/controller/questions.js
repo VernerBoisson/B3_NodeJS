@@ -34,41 +34,41 @@ module.exports = {
           return message.defaultplayer(i);
         }
     }},
-    worldtour:{
+    worldtour: x => { return {
         type: 'input',
         name: 'score',
-        message: message.questions.worldtour,
+        message: message.questions.worldtour(x),
         validate: function(value) {
           let pass = value.match(
-            /^[0-9]+/gm
+            /[0-9]|1[0-9]|20)+/gm
           );
           if (pass && pass > 0 && pass < 21) {
             return true;
           }
           return message.errors.questions.worldtour;
         }
-    },
-    threehundredone:{
+    }},
+    threehundredone:x => { return {
         type: 'input',
         name: 'score',
-        message: message.questions.threehundredone,
+        message: message.questions.threehundredone(x),
         validate: function(value) {
           let pass = value.match(
-            /^[0-9]+/gm
+            /[0-9]|1[0-9]|20|25)+/gm
           );
           if (pass && pass >= 0) {
             return true;
           }
           return message.errors.questions.threehundredone;
         }
-    },
+    }},
     cricket:{
         type: 'input',
         name: 'score',
         message: message.questions.cricket,
         validate: function(value) {
           let pass = value.match(
-            /^[0-9]+/gm
+            /[0-9]|1[0-9]|20|25)+/gm
           );
           if (pass) {
             return true;

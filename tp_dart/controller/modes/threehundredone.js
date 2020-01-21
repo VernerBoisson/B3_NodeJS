@@ -6,15 +6,12 @@ class ThreeHundredOne extends Mode{
         this.winnable = false
     }
 
-    run(score, player){
-        score = score.reduce( (a,b) => +a + +b)
+    run(score, multiplicator, player){
         let result = player.score - score
-        if(result == 1){
-            
-        }else if(result == 0 && this.winnable){
+        if(result === 0 && multiplicator===2){
             player.score = result
-            player.winner = true
-        }else if(result > 0){
+            player.isPlaying = false
+        }else if(result > 1){
             player.score = result
         }
     }

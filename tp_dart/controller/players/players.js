@@ -1,14 +1,23 @@
 class Players{
     constructor(){
         this.players = []
+        this.rank = []
     }
 
-    add(Player){
+    addPlayer(Player){
         this.players.push(Player)
     }
 
-    length(){
+    lengthPlayers(){
         return this.players.length
+    }
+
+    addWinner(Player){
+        this.rank.push(Player)
+    }
+
+    lengthRanking(){
+        return this.rank.length
     }
 }
 

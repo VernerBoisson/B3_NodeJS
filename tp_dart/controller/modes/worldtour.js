@@ -10,7 +10,7 @@ class WorldTour extends Mode{
             player.score.shift()
         }
         if(!player.score.length > 0){
-            player.winner = true
+            player.isPlaying = false
         }
     }
 }

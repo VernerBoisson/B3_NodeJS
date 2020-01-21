@@ -8,8 +8,8 @@ module.exports = {
         "mode":"Quel est le mode de jeu ?",
         "players":"Combien de joueurs ?",
         "playername":"Quel est ton nom ?",
-        "worldtour":"Quel est le secteur touché ?",
-        "threehundredone":"Quel est le secteur du tir ?",
+        "worldtour": x => `Quel est le secteur du tir ${x} ?`,
+        "threehundredone": x => `Quel est le secteur du tir ${x} ?`,
         "cricket":"Quel est le score ?",
         "multiplicator":"Quel est le multiplicateur du tir ?"
     },
