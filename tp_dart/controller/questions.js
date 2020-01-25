@@ -42,13 +42,13 @@ module.exports = {
           let pass = value.match(
             /[0-9]|1[0-9]|20+/gm
           );
-          if (pass && pass > 0 && pass < 21) {
+          if (pass && pass < 21) {
             return true;
           }
           return message.errors.questions.worldtour;
         }
     }},
-    threehundredone:x => { return {
+    threehundredone: x => { return {
         type: 'input',
         name: 'score',
         message: message.questions.threehundredone(x),
