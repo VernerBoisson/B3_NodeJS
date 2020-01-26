@@ -1,4 +1,4 @@
-const modes = require('../messages').modename
+const modes = require('../assets/messages').modename
 
 module.exports ={
     switch: async (mode, ...callbacks) => {
