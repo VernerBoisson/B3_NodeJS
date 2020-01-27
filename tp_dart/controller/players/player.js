@@ -1,4 +1,4 @@
-const messages = require('../../messages.js')
+const messages = require('../../assets/messages')
 
 class Player{
     constructor(name, mode){

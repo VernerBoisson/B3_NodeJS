@@ -5,16 +5,20 @@ const Player = require('./players/player')
 const WorldTour = require('./modes/worldtour')
 const ThreeHundredOne = require('./modes/threehundredone')
 const Cricket = require('./modes/cricket')
-const messages = require('../messages.js')
+const messages = require('../assets/messagesœ')
 const tools = require('./tools')
 
-async function shots(player, callbackSector, callbackMutiplicator, callbackMessage, position){
-    console.log(callbackMutiplicator)
+async function shots(player, callbackMessage, position, callbackSector, callbackMutiplicator=1){
     for(let i=0; i<3; i++){
         let score = 0
         let sector = await inquirer.prompt(callbackSector(i+1))
-        let multiplicator = callbackMutiplicator
-        score = sector.score * multiplicator.multiplicator
+        let multiplicator = 1
+        if(callbackMutiplicator!=1){
+            multiplicator = await inquirer.prompt(callbackMutiplicator)
+            score = sector.score * multiplicator.multiplicator
+        }else{
+            score = sector.score
+        }
         await mode.run(score, multiplicator.multiplicator, player)
         console.log(callbackMessage(player.name, player.score))
         if(!player.isPlaying){
@@ -30,7 +34,6 @@ async function shots(player, callbackSector, callbackMutiplicator, callbackMessa
 
 async function play(){
     const players = new Players()
-    const shotnumbers = 3
     let position = 1
     const answerMode = await inquirer.prompt(questions.mode)
     const answerNbPlayer = await inquirer.prompt(questions.nbplayer)
@@ -55,19 +58,18 @@ async function play(){
                 await tools.switch(mode.name,
                     async () => {
                         await shots(player, 
-                            questions.worldtour,
-                            {multiplicator:1}, 
                             messages.score.worldtour,
-                            position
+                            position,
+                            questions.worldtour, 
                         )
 
                     },
                     async () => {
-                        await shots(player, 
-                            questions.threehundredone, 
-                            await inquirer.prompt(questions.multiplicator), 
+                        await shots(player,
                             messages.score.threehundredone,
-                            position
+                            position,
+                            questions.threehundredone, 
+                            questions.multiplicator, 
                         )
                     },
                     x => null)
