@@ -83,7 +83,7 @@ router.delete('/:id', async (req, res, next) => {
 })
 
 // TODO: fix games/id/players
-router.get('/:id/players',  (req, res, next) => {
+router.get('/:id/players', async (req, res, next) => {
   const game = await GamePlayer.get(req.query.id)
   const players = await Player.getAll()
   res.format({
