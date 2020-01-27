@@ -1,38 +1,38 @@
 const mongoose = require('mongoose')
+const autoIncrement = require('mongoose-auto-increment')
 
 const schema = new mongoose.Schema({
     rowid: {type: Number, required: true, unique: true},
     name: {type: String},
     email: {type: String},
-    gameWin: {type: Number},
-    gameLost: {type: Number},
-    createdAt: {type: Date}
+    gameWin: {type: Number, default:0},
+    gameLost: {type: Number, default:0},
+    createdAt: {type: Date, default: new Date()}
 })
 
 const player = mongoose.model('Player', schema)
+
+autoIncrement.initialize(mongoose.connection)
+schema.plugin(autoIncrement.plugin, {
+    model: 'Player',
+    field: 'rowid',
+    startAt: 1
+})
 
 module.exports = {
     get: (playerId) => {
       return player.findOne({rowid: playerId})
     },
   
-    count: () => {
-      return player.count()
-    },
-  
-    getAll: (limit, offset) => {
-      return player.find().skip(offset).limit(limit)
+    getAll: (limit, offset, sort="name", reverse=1) => {
+      order[sort]= reverse
+      return player.find().skip(offset).limit(limit).sort(order)
     },
   
     insert: (params) => {
-      let id = player.count()
       let add_player = new player({
-        rowid: id,
         name: params.name,
         email: params.email,
-        gameWin: 0,
-        gameLost: 0,
-        createdAt: params.createdAt,
       })
       return add_player.save()
     },

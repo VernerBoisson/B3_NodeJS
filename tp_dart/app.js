@@ -5,6 +5,8 @@ const app = express()
 
 const PORT = 8080
 
+// TODO: faire les views
+
 app.use('/players', require('./routes/players'))
 
 app.use('/games', require('./routes/games'))
