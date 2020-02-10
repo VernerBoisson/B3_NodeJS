@@ -5,7 +5,7 @@ const Player = require('./players/player')
 const WorldTour = require('./modes/worldtour')
 const ThreeHundredOne = require('./modes/threehundredone')
 const Cricket = require('./modes/cricket')
-const messages = require('../assets/messagesœ')
+const messages = require('../assets/messages')
 const tools = require('./tools')
 
 async function shots(player, callbackMessage, position, callbackSector, callbackMutiplicator=1){

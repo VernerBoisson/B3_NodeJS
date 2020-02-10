@@ -5,18 +5,20 @@ const GamePlayer = require('../models/gamePlayers')
 const Player = require('../models/players')
 
 router.get('/', async (req, res, next) => {
+  console.log("test")
   let limit = parseInt(req.query.limit) || 10
   let offset = parseInt(req.query.offset)*limit || 0
   if (limit > 20) limit = 20
-  let sort = req.query.sort
-  let reverse = req.query.reverse ? -1 : 1
+  let sort = req.query.sort ? req.query.sort : false
+  let reverse = req.query.reverse
   let status = ['draft', 'started', 'ended'].indexOf(req.query.status) >= 0 ? req.query.status : false
 
   const games = await Game.getAll(limit, offset, sort, reverse, status)
+  console.log(games)
   res.format({
       html: () => {
-      res.render('games/', {
-          games: results,
+      res.render('games/games', {
+          games: games,
           limit: limit,
           offset: offset
       })
@@ -92,7 +94,6 @@ router.get('/:id/players', async (req, res, next) => {
   })
 })
 
-// TODO: FINIR TP
 router.post('/:id/players',  (req, res, next) => {
 
 })

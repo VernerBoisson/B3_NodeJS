@@ -5,7 +5,7 @@ const app = express()
 
 const PORT = 8080
 
-// TODO: faire les views
+app.set('view engine', 'pug')
 
 app.use('/players', require('./routes/players'))
 
@@ -18,19 +18,25 @@ app.get('/', function (req, res) {
   })
 })
 
-app.use(function(err, req, res, next) {
+app.get('*', (req, res, next) => {
+  let error = new Error(errors[404])
+  error.status = 404
+  next(error)
+});
+
+app.use((err, req, res, next) => {
   let data = {
-    message: err.message,
+    message: err.message || errors[500],
     status: err.status || 500
   }
-
   res.status(data.status)
 
   res.format({
-    html: () => { res.render('error', data) },
+    html: () => { res.render('error', {data}) },
     json: () => { res.send(data) }
   })
 })
+
 
 
 app.listen(PORT)

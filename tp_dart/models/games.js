@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const db = require('./database')
 const autoIncrement = require('mongoose-auto-increment')
 
 const schema = new mongoose.Schema({
@@ -29,8 +30,12 @@ module.exports = {
     },
 
     getAll: (limit, offset, sort, reverse, status) => {
-        order[sort] = reverse
+        console.log("getAll")
+        let order = {}
+        sort ? order[sort] = reverse : order = undefined
+        console.log(order)
         status ? gamestatus = {'status':status} : gamestatus = undefined
+        console.log(gamestatus)
         return game.find(gamestatus).skip(offset).limit(limit).sort(order)
     },
 

@@ -13,9 +13,9 @@ router.get('/', async (req, res, next) => {
     + await Player.count()
     res.format({
         html: () => {
-        res.render('players/', {
+        res.render('players/players', {
             pla: results[0],
-            count: results[1].count,
+            count: results[1],
             limit: limit,
             offset: offset
         })

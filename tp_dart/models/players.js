@@ -25,7 +25,8 @@ module.exports = {
     },
   
     getAll: (limit, offset, sort="name", reverse=1) => {
-      order[sort]= reverse
+      order = {}
+      sort ? order[sort]= reverse : order = undefined
       return player.find().skip(offset).limit(limit).sort(order)
     },
   
@@ -48,6 +49,10 @@ module.exports = {
   
     remove: (playerId) => {
       return player.deleteOne({rowid: playerId})
+    },
+
+    count: () =>{
+      return player.count()
     }
   
   }
