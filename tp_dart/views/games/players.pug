@@ -1,0 +1,37 @@
+doctype html  
+html(lang='en')  
+    head
+        title Dart
+    body
+        h1 Game
+        label Name : #{game.name} 
+        br
+        label Mode : #{game.mode} 
+        br
+        label Status : #{game.status} 
+        br
+        br
+        label Players 
+        table
+            tr
+                th id
+            each player in gamePlayers
+                tr
+                    th #{player.playerId}
+                    th
+                        form(action='/games/'+game.id+'/players?_method=DELETE&playerId='+player.id, method='post')
+                            input(type='submit', value='Supprimer')
+        br
+        br
+        label All Players 
+        table
+            tr
+                th id
+                th name
+            each player in players
+                tr
+                    th #{player.id}
+                    th #{player.name}
+                    th
+                        form(action='/games/'+game.id+'/players?playerId='+player.id, method='post')
+                            input(type='submit', value='Ajouter')

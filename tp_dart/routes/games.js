@@ -14,6 +14,7 @@ router.get('/', async (req, res, next) => {
   let status = [gameStatus.draft, gameStatus.started, gameStatus.ended].indexOf(req.query.status) >= 0 ? req.query.status : false
 
   const games = await Game.getAll(limit, offset, sort, reverse, status)
+  console.log(games)
   res.format({
       html: () => {
       res.render('games/games', {
@@ -37,7 +38,7 @@ router.get('/new', (req, res, next) => {
     res.format({
         html: () => {  
           res.render('games/new', {
-            games: {},
+            game: {},
             action: '/games'
           })
         },
@@ -77,9 +78,9 @@ router.get('/:id/edit', async (req, res, next) => {
   if(!game) return next()
   res.format({
     html: () => { 
-      res.render(`/games/new`, {
-        games: game,
-        action: `/games/${game.id}?_method=put`
+      res.render(`games/new`, {
+        game: game,
+        action: `/games/${game.id}?_method=PATCH`
       })
     },
     json: () => { 
@@ -111,14 +112,15 @@ router.patch('/:id', async (req, res, next) => {
     }else
       game = await Game.update(game.id, req.params.name, req.params.status)
   }
+  if(error_code!==200){
+    let error = new Error(error_message)
+    error.status = error_code
+    next(error) 
+  }
+
   res.format({
-    html: () => { res.redirect(`/games/${req.params.id}`) },
+    html: () => { res.redirect(`/games`) },
     json: () => {
-      if(error!==200){
-        let error = new Error(error_message)
-        error.status = error_code
-        next(error) 
-      }
       res.status(200).send({message: errors[200], game})
     }
   })
@@ -134,26 +136,37 @@ router.delete('/:id', async (req, res, next) => {
 })
 
 router.get('/:id/players', async (req, res, next) => {
-  const players = await GamePlayer.getByGameId(req.params.id)
+  const game = await Game.get(req.params.id)
+  const gamePlayers = await GamePlayer.getByGameId(req.params.id)
+  const players = await Player.getAll()
   res.format({
-    html: () => { res.redirect(`/games/${req.params.id}`) },
-    json: () => { res.status(201).send({message: errors[201], players}) }
+    html: () => { 
+      res.render(`games/players`, {
+        game:game,
+        gamePlayers: gamePlayers,
+        players: players,
+      })
+    },
+    json: () => { res.status(201).send({message: errors[201], gamePlayers}) }
   })
 })
 
-// TODO: les fonctions qui suivents 
 router.post('/:id/players', async (req, res, next) => {
-  const game = await Game.get(req.params.id)
+  console.log(req.query, req.params)
+  const player = await Player.get(req.query.playerId)
+  console.log("test" , player)
+  const gamePlayer = await GamePlayer.insert(player, req.params.id)
+  console.log("test3", player)
   res.format({
-    html: () => { res.redirect(`/games/${req.params.id}`) },
+    html: () => { res.redirect(`/games/${req.params.id}/players`) },
     json: () => { res.status(201).send({message: errors[201], player}) }
   })
 })
 
 router.delete('/:id/players', async (req, res, next) => {
-  const game = await Game.get(req.params.id)
+  const gamePlayer = await GamePlayer.remove(req.query.id);
   res.format({
-    html: () => { res.redirect(`/games/${req.params.id}`) },
+    html: () => { res.redirect(`/games/${req.params.id}/players`) },
     json: () => { res.status(201).send({message: errors[201], player}) }
   })
 })

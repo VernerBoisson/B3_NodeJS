@@ -18,7 +18,7 @@ html(lang='en')
         th #{game.name}
         th #{game.mode}
         th #{game.gamecurrentPlayerId}
-        th #{game.gamestatus}
+        th #{game.status}
         th #{game.createdAt}
         th 
           form(action='/games/'+game.id+'?_method=DELETE', method='post')

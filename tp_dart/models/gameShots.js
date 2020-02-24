@@ -11,14 +11,14 @@ const schema = new mongoose.Schema({
     createdAt: {type: Date, default: new Date()}
 })
 
-const shot = mongoose.model('Shot', schema)
-
 autoIncrement.initialize(mongoose.connection)
 schema.plugin(autoIncrement.plugin, {
     model: 'Shot',
     field: 'id',
     startAt: 1
 })
+
+const shot = mongoose.model('Shot', schema)
 
 module.exports = {
     insert: (params) => {

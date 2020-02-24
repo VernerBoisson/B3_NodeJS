@@ -12,14 +12,15 @@ const schema = new mongoose.Schema({
     createdAt: {type: Date, default: new Date()}
 })
 
-const gameplayer = mongoose.model('GamePlayers', schema)
-
 autoIncrement.initialize(mongoose.connection)
 schema.plugin(autoIncrement.plugin, {
     model: 'GamePlayers',
     field: 'id',
     startAt: 1
 })
+
+const gameplayer = mongoose.model('GamePlayers', schema)
+
 
 module.exports = {
     get: (gameplayerId) => {
@@ -30,10 +31,10 @@ module.exports = {
         return gameplayer.find({gameId: gameId})
     },
 
-    insert: (params) => {
+    insert: (params, gameId) => {
         let add_gameplayer = new gameplayer({
-            playerId: params.playerId,
-            gameId: params.gameId,
+            playerId: params.id,
+            gameId: gameId,
             remainingShots: params.remainingShots,
             score: params.score,
             rank: params.rank,

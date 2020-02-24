@@ -40,17 +40,21 @@ module.exports = {
         const add_game = new game({
             name: params.name,
             mode: params.mode,
+            status: 'draft',
           })
         return add_game.save()
     },
 
     update: (gameId, params) => {
-        let update_game = game.findOne({id: gameId})
-        if(params.name) update_game.name = params.name
-        if(params.mode) update_game.mode = params.mode
-        if(params.status) update_game.status = params.status
-        if(params.currentPlayerId) update_game.currentPlayerId = params.currentPlayerId
-        return update_game.save()
+        const update_game = game.findOne({id: gameId})
+        const filter = { id: gameId };
+        const update = {
+            name : params.name ? params.name : update_game.name,
+            mode : params.mode ? params.mode : update_game.mode,
+            currentPlayerId : params.currentPlayerId ? params.currentPlayerId : update_game.currentPlayerId,
+            status : params.status ? params.status : update_game.status,
+        }
+        return game.findOneAndUpdate(filter,update)
     },
 
     remove: (gameId) => {

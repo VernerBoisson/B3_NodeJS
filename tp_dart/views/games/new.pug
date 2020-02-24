@@ -4,14 +4,28 @@ html(lang='en')
     title Pug
   body
   h1 Games
-  form(action='/games', method='POST')
-    label Name
-    input(name="name", cols="30", rows="10", type="text")
-    label Mode :
-    label Around the world
-    input(name="mode", value="around-the-world", cols="30", rows="10", type="radio") 
-    label 301
-    input(name="mode", value="301", cols="30", rows="10", type="radio") 
-    label Cricket
-    input(name="mode", value="cricket", cols="30", rows="10", type="radio") 
-    input(type='submit', value='Submit')
+  if game.id
+    form(action=action, method='POST')
+      label Name
+      input(name="name",  type="text",  value=game.name)
+      label Mode :
+      label #{game.mode}
+      label Around the world
+      input(name="mode", value="around-the-world",  type="radio") 
+      label 301
+      input(name="mode", value="301",  type="radio") 
+      label Cricket
+      input(name="mode", value="cricket",  type="radio") 
+      input(type='submit', value='Submit')
+  else
+    form(action=action, method='POST')
+      label Name
+      input(name="name",  type="text")
+      label Mode :
+      label Around the world
+      input(name="mode", value="around-the-world",  type="radio") 
+      label 301
+      input(name="mode", value="301",  type="radio") 
+      label Cricket
+      input(name="mode", value="cricket",  type="radio") 
+      input(type='submit', value='Submit')
