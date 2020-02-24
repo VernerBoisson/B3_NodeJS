@@ -152,22 +152,25 @@ router.get('/:id/players', async (req, res, next) => {
 })
 
 router.post('/:id/players', async (req, res, next) => {
-  console.log(req.query, req.params)
   const player = await Player.get(req.query.playerId)
-  console.log("test" , player)
   const gamePlayer = await GamePlayer.insert(player, req.params.id)
-  console.log("test3", player)
   res.format({
     html: () => { res.redirect(`/games/${req.params.id}/players`) },
-    json: () => { res.status(201).send({message: errors[201], player}) }
+    json: () => { res.status(204).send({message: errors[204]}) }
   })
 })
 
 router.delete('/:id/players', async (req, res, next) => {
   const gamePlayer = await GamePlayer.remove(req.query.id);
+  const game = await Game.get(req.params.id)
+  if(game.status != gameStatus.draft){
+    let error = new Error(errors[422].player_not_addable)
+    error.status = 422
+    next(error) 
+  }
   res.format({
     html: () => { res.redirect(`/games/${req.params.id}/players`) },
-    json: () => { res.status(201).send({message: errors[201], player}) }
+    json: () => { res.status(204).send({message: errors[204]}) }
   })
 })
 

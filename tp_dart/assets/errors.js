@@ -13,7 +13,8 @@ module.exports = {
     },
     422:{
         not_startable:"GAME_NOT_STARTABLE",
-        player_missing:"GAME_PLAYER_MISSING"
+        player_missing:"GAME_PLAYER_MISSING",
+        player_not_addable:"PLAYERS_NOT_ADDABLE_GAME_STARTED"
     },
     500:"SERVEUR_ERROR"
 }

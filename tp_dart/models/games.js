@@ -1,16 +1,18 @@
 const mongoose = require('mongoose')
 const db = require('./database')
 const autoIncrement = require('mongoose-auto-increment')
+const gameStatus = require('../assets/messages').gameStatus
+const modeName = require('../assets/messages').modename
 
 const schema = new mongoose.Schema({
     id: {type: Number, required: true, unique: true},
     name: {type: String},
     mode:{type: String, 
-        enum:['around-the-world', '301', 'cricket']},
+        enum:[modeName.worldtour, modeName.threehundredone, modeName.cricket]},
     currentPlayerId:{type: String},
     status:{type: String, 
-        enum:['draft', 'started', 'ended'],
-        default: 'draft'
+        enum:[gameStatus.draft, gameStatus.started, gameStatus.ended],
+        default: gameStatus.draft
     },
     createdAt: {type: Date, default: new Date()}
 })
@@ -40,7 +42,7 @@ module.exports = {
         const add_game = new game({
             name: params.name,
             mode: params.mode,
-            status: 'draft',
+            status: gameStatus.draft,
           })
         return add_game.save()
     },
