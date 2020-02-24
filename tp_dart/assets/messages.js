@@ -34,5 +34,10 @@ module.exports = {
         "simple":"simple",
         "double":"double",
         "triple":"triple"
+    },
+    "gameStatus":{
+        "draft":"draft",
+        "started":"started",
+        "ended":"ended"
     }
 }

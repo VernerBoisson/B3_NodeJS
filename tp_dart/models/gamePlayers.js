@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const autoIncrement = require('mongoose-auto-increment')
 
 const schema = new mongoose.Schema({
-    rowid: {type: Number, required: true, unique: true},
+    id: {type: Number, required: true, unique: true},
     playerId: {type: Number, required: true},
     gameId: {type:Number, required: true},
     remainingShots: {type:Number},
@@ -17,13 +17,17 @@ const gameplayer = mongoose.model('GamePlayers', schema)
 autoIncrement.initialize(mongoose.connection)
 schema.plugin(autoIncrement.plugin, {
     model: 'GamePlayers',
-    field: 'rowid',
+    field: 'id',
     startAt: 1
 })
 
 module.exports = {
     get: (gameplayerId) => {
-        return gameplayer.findOne({rowid: gameplayerId})
+        return gameplayer.findOne({id: gameplayerId})
+    },
+
+    getByGameId: (gameId) => {
+        return gameplayer.find({gameId: gameId})
     },
 
     insert: (params) => {
@@ -39,6 +43,6 @@ module.exports = {
     },
 
     remove: (gameplayerId) => {
-        return gameplayer.deleteOne({rowid: gameplayerId})
+        return gameplayer.deleteOne({id: gameplayerId})
     }
 }

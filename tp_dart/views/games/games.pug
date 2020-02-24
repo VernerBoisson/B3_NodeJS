@@ -1,8 +1,26 @@
 doctype html  
 html(lang='en')  
  head
-   title Pug
+   title Dart
  body
-   h1 Pug Examples
-   div.container
-     p Cool Pug example!
+   h1 Games
+   table
+    tr
+      th id
+      th name
+      th mode
+      th currentPlayerId
+      th status
+      th create
+    each game in games
+      tr
+        th #{game.id}
+        th #{game.name}
+        th #{game.mode}
+        th #{game.gamecurrentPlayerId}
+        th #{game.gamestatus}
+        th #{game.createdAt}
+        th 
+          form(action='/games/'+game.id+'?_method=DELETE', method='post')
+            input(type='submit', value='Supprimer')
+    

@@ -1,0 +1,20 @@
+doctype html  
+html(lang='en')  
+ head
+   title Dart
+ body
+    h1 Player
+    if player.id
+      form(action=action, method="post")
+          label(for="name") Nom
+          input(id="name", type="text", name="name", value=player.name)
+          label(for="email") Email
+          input(id="email", type="text", name="email", value=player.email)
+          input(type="submit", value="Valider")
+    else
+      form(action=action, method="post")
+        label(for="name") Nom
+        input(id="name", type="text", name="name")
+        label(for="email") Email
+        input(id="email", type="text", name="email")
+        input(type="submit", value="Valider")

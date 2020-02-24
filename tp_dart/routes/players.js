@@ -9,22 +9,21 @@ router.get('/', async (req, res, next) => {
     let reverse = parseInt(req.query.reverse) || 1
     if (limit > 20) limit = 20
 
-    const results = await Player.getAll(limit, offset, sort, reverse)
-    + await Player.count()
+    const players = await Player.getAll(limit, offset, sort, reverse)
     res.format({
         html: () => {
         res.render('players/players', {
-            pla: results[0],
-            count: results[1],
+            players: players,
+            count: players.length,
             limit: limit,
             offset: offset
         })
         },
         json: () => {
         res.send({
-            data: results[0],
+            data: players,
             meta: {
-            count: results[1].count
+            count: players.length
             }
         })
         }
@@ -40,10 +39,9 @@ router.post('/', async (req, res, next) => {
         err.status = 400
         return next(err)
       }
-    
     const player = await Player.insert(req.body)
     res.format({
-        html: () => { res.redirect('/users') },
+        html: () => { res.redirect('/players') },
         json: () => { res.status(201).send({message: errors[201], player}) }
     })
 })
@@ -66,10 +64,10 @@ router.get('/new', (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
     const player = await Player.get(req.params.id)
-    if(!player) return next()
+    if(!player) next()
 
     res.format({
-        html: () => { res.redirect(`/player/${req.params.id}/edit`) },
+        html: () => { res.redirect(`/players/${req.params.id}/edit`) },
         json: () => { res.send({ data: player }) }
     })
 })
@@ -79,9 +77,9 @@ router.get('/:id/edit', async (req, res, next) => {
     if(!player) return next()
     res.format({
         html: () => {
-          res.render('players/edit', {
+          res.render('players/new', {
             player: player,
-            action: `/players/${player.rowid}?_method=put`
+            action: `/players/${player.id}?_method=PATCH`
           })
         },
         json: () => {
@@ -95,7 +93,7 @@ router.get('/:id/edit', async (req, res, next) => {
 router.patch('/:id', async (req, res, next) => {
     player = await Player.update(req.params.id, req.body)
     res.format({
-        html: () => { res.redirect(`/players/${req.params.userId}`) },
+        html: () => { res.redirect(`/players/`) },
         json: () => { res.status(200).send({ message: errors[200] }) }
     })
 })
@@ -103,9 +101,9 @@ router.patch('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
     let player = await Player.get(req.params.id)
     if(!player){
-        let err = new Error(errors[410])
+        let err = new Error(errors[410].player_not_deletable)
         err.status = 410
-        return next(err)
+        next(err)
     }
     player = await Player.remove(req.params.id)
     res.format({

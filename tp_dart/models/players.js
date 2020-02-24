@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const autoIncrement = require('mongoose-auto-increment')
 
 const schema = new mongoose.Schema({
-    rowid: {type: Number, required: true, unique: true},
+    id: {type: Number, required: true, unique: true},
     name: {type: String},
     email: {type: String},
     gameWin: {type: Number, default:0},
@@ -10,18 +10,18 @@ const schema = new mongoose.Schema({
     createdAt: {type: Date, default: new Date()}
 })
 
-const player = mongoose.model('Player', schema)
 
 autoIncrement.initialize(mongoose.connection)
 schema.plugin(autoIncrement.plugin, {
     model: 'Player',
-    field: 'rowid',
+    field: 'id',
     startAt: 1
 })
+const player = mongoose.model('Player', schema)
 
 module.exports = {
     get: (playerId) => {
-      return player.findOne({rowid: playerId})
+      return player.findOne({id: playerId})
     },
   
     getAll: (limit, offset, sort="name", reverse=1) => {
@@ -31,7 +31,7 @@ module.exports = {
     },
   
     insert: (params) => {
-      let add_player = new player({
+      const add_player = new player({
         name: params.name,
         email: params.email,
       })
@@ -39,16 +39,19 @@ module.exports = {
     },
   
     update: (playerId, params) => {
-      let update_player = player.findOne({rowid: playerId})
-      if(params.name) update_player.name = params.name
-      if(params.email) update_player.email = params.email
-      if(params.gameWin) update_player.gameWin = params.gameWin
-      if(params.gameLost) update_player.gameLost = params.gameLost
-      return update_player.save()
+      const update_player = player.findOne({id: playerId})
+      const filter = { id: playerId };
+      const update = {
+        name : params.name ? params.name : update_player.name,
+        email : params.email ? params.email : update_player.email,
+        gameWin : params.gameWin ? params.gameWin : update_player.gameWin,
+        gameLost : params.gameLost ? params.gameLost : update_player.gameLost,
+      }
+      return player.findOneAndUpdate(filter,update)
     },
   
     remove: (playerId) => {
-      return player.deleteOne({rowid: playerId})
+      return player.deleteOne({id: playerId})
     },
 
     count: () =>{

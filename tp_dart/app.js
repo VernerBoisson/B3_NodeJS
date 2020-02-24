@@ -1,11 +1,15 @@
 const errors = require('./assets/errors')
-
 const express = require('express')
+const methodOverride = require('method-override')
 const app = express()
 
 const PORT = 8080
 
 app.set('view engine', 'pug')
+
+app.use(methodOverride('_method'))
+
+app.use(express.urlencoded({extended: true}));
 
 app.use('/players', require('./routes/players'))
 

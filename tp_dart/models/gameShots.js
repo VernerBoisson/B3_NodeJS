@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
-    rowid: {type: Number, required: true, unique: true},
+    id: {type: Number, required: true, unique: true},
     gameId: {type: Number},
     playerId:{type: Number},
     multiplicator:{type: Number, 
@@ -16,7 +16,7 @@ const shot = mongoose.model('Shot', schema)
 autoIncrement.initialize(mongoose.connection)
 schema.plugin(autoIncrement.plugin, {
     model: 'Shot',
-    field: 'rowid',
+    field: 'id',
     startAt: 1
 })
 
@@ -32,6 +32,6 @@ module.exports = {
     },
   
     remove: (playerId) => {
-      return shot.deleteOne({rowid: playerId})
+      return shot.deleteOne({id: playerId})
     }
   }

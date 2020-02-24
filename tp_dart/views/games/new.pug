@@ -1,8 +1,17 @@
 doctype html  
 html(lang='en')  
- head
-   title Pug
- body
-   h1 Pug Examples
-   div.container
-     p Cool Pug example!
+  head
+    title Pug
+  body
+  h1 Games
+  form(action='/games', method='POST')
+    label Name
+    input(name="name", cols="30", rows="10", type="text")
+    label Mode :
+    label Around the world
+    input(name="mode", value="around-the-world", cols="30", rows="10", type="radio") 
+    label 301
+    input(name="mode", value="301", cols="30", rows="10", type="radio") 
+    label Cricket
+    input(name="mode", value="cricket", cols="30", rows="10", type="radio") 
+    input(type='submit', value='Submit')

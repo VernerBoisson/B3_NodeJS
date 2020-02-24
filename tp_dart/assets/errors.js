@@ -1,7 +1,19 @@
 module.exports = {
     200:"SUCCESS",
+    201:"CREATED",
     400:"INVALID_FORMAT",
     404:"NOT_FOUND",
-    406:"NOT_ACCEPTABLE",
+    406:{
+        not_acceptable:"NOT_ACCEPTABLE",
+        not_available:"NOT_API_AVAILABLE"
+    },
+    410:{
+    game_not_editable:"GAME_NOT_EDITABLE",
+    player_not_deletable:"PLAYER_NOT_DELETABLE"
+    },
+    422:{
+        not_startable:"GAME_NOT_STARTABLE",
+        player_missing:"GAME_PLAYER_MISSING"
+    },
     500:"SERVEUR_ERROR"
 }
