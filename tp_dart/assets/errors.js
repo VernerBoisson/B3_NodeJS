@@ -14,7 +14,9 @@ module.exports = {
     422:{
         not_startable:"GAME_NOT_STARTABLE",
         player_missing:"GAME_PLAYER_MISSING",
-        player_not_addable:"PLAYERS_NOT_ADDABLE_GAME_STARTED"
+        player_not_addable:"PLAYERS_NOT_ADDABLE_GAME_STARTED",
+        game_not_started:"GAME_NOT_STARTED",
+        game_ended:"GAME_ENDED"
     },
     500:"SERVEUR_ERROR"
 }

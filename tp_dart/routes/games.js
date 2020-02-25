@@ -3,7 +3,9 @@ const errors = require('../assets/errors')
 const Game = require('../models/games')
 const GamePlayer = require('../models/gamePlayers')
 const Player = require('../models/players')
+const GameShots = require('../models/gameShots')
 const gameStatus = require('../assets/messages').gameStatus
+const events = require('../events/events')
 
 router.get('/', async (req, res, next) => {
   let limit = parseInt(req.query.limit) || 10
@@ -117,6 +119,11 @@ router.patch('/:id', async (req, res, next) => {
     error.status = error_code
     next(error) 
   }
+  if(req.params.status === gameStatus.started){
+    events.emit('play')
+    events.on('game', game => game)
+    events.on('players', players => players)
+  }
 
   res.format({
     html: () => { res.redirect(`/games`) },
@@ -174,12 +181,24 @@ router.delete('/:id/players', async (req, res, next) => {
   })
 })
 
-router.post('/:id/shots',  (req, res, next) => {
-
-})
-
-router.delete('/:id/shots/previous',  (req, res, next) => {
-
+router.post('/:id/shots',  async (req, res, next) => {
+  const game = await Game.get(req.params.id)
+  if(game.status === gameStatus.ended){
+    let error = new Error(errors[422].game_ended)
+    error.status = 422
+    next(error) 
+  }
+  if(game.status === gameStatus.draft){
+    let error = new Error(errors[422].game_not_started)
+    error.status = 422
+    next(error) 
+  }
+  const shots = await GameShots.insert(game.id, game.currentPlayerId,req.body.sector, req.body.multiplicator)
+  events.on("shot", (shots) => shots)
+  res.format({
+    html: () => { res.redirect(`/games/${req.params.id}`) },
+    json: () => { res.status(204).send({message: errors[204]}) }
+  })
 })
 
 module.exports = router

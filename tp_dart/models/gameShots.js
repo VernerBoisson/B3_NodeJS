@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const autoIncrement = require('mongoose-auto-increment')
 
 const schema = new mongoose.Schema({
     id: {type: Number, required: true, unique: true},
@@ -21,12 +22,12 @@ schema.plugin(autoIncrement.plugin, {
 const shot = mongoose.model('Shot', schema)
 
 module.exports = {
-    insert: (params) => {
+    insert: (gameId, playerId, sector, multiplicator) => {
         let add_shot = new shot({
-            gameId: params.gameId,
-            playerId: params.playerId,
-            multiplicator: params.multiplicator, 
-            sector: params.sector
+            gameId: gameId,
+            playerId: playerId,
+            multiplicator: multiplicator, 
+            sector: sector
         })
         return add_shot.save()
     },
