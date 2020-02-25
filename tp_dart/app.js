@@ -1,9 +1,10 @@
 const errors = require('./assets/errors')
 const express = require('express')
 const methodOverride = require('method-override')
+const config = require("./config")
 const app = express()
 
-const PORT = 8080
+const PORT = config.port
 
 app.set('view engine', 'pug')
 
